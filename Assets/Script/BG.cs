@@ -17,7 +17,7 @@ public class BG : MonoBehaviour
     void Update()
     {
         movement += sleep*Time.deltaTime;
-        Debug.Log(movement);
+      //  Debug.Log(movement);
         _material.mainTextureOffset = movement;
 
 
