@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
-
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rd;
@@ -15,12 +16,41 @@ public class Player : MonoBehaviour
     public LayerMask platform; //检测得图层
     public GameObject grundCheck; //地面
     public bool _playerdead;
+    public Button R, L;
+    
     void Start()
     {
         rd = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        AddEventTrigger(R, EventTriggerType.PointerDown, () => xVelocity = -1); // R按下，xVelocity = -1
+        AddEventTrigger(R, EventTriggerType.PointerUp, () => xVelocity = 0);    // R抬起，xVelocity = 0
+        AddEventTrigger(L, EventTriggerType.PointerDown, () => xVelocity = 1);  // L按下，xVelocity = 1
+        AddEventTrigger(L, EventTriggerType.PointerUp, () => xVelocity = 0);    // L抬起，xVelocity = 0= 0
+        // R.onClick.AddListener((() =>
+        // {
+        //     xVelocity = -1;
+        //    
+        // }));
+        // R.onMouseUp.AddListener(() => {
+        //     xVelocity = 0;
+        // });
+        // L.onClick.AddListener((() =>
+        // {
+        //     xVelocity = 1;
+        //     
+        // }));
+        // L.onMouseUp.AddListener(() => {
+        //     xVelocity = 0;
+        // });
+        
     }
-
+    void AddEventTrigger(Button button, EventTriggerType triggerType, System.Action action)
+    {
+        EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
+        var entry = new EventTrigger.Entry { eventID = triggerType };
+        entry.callback.AddListener((eventData) => { action.Invoke(); });
+        trigger.triggers.Add(entry);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -30,9 +60,11 @@ public class Player : MonoBehaviour
         Movement();
     }
 
+
     private void Movement()
     {
-        xVelocity = Input.GetAxisRaw("Horizontal");
+       //  xVelocity = Input.GetAxisRaw("Horizontal");
+       // Debug.Log(xVelocity);
         rd.velocity = new Vector2(xVelocity*_speed ,rd.velocity.y);
         _animator.SetFloat("speed",Mathf.Abs(rd.velocity.x));
         if (xVelocity!=0)
@@ -45,6 +77,7 @@ public class Player : MonoBehaviour
     private void PlayerDead()
     {
         _playerdead = true;
+        GameManager.GameOver(_playerdead);
     }
 
 

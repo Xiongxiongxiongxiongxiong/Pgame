@@ -5,13 +5,13 @@ using UnityEngine;
 public class Platforn : MonoBehaviour
 {
     private Vector3 movement;
-    public GameObject top;
+    private GameObject top;
     public float speed;
     // Start is called before the first frame update
     void Start()
     {
         movement.y = speed;
-        //top = GameObject.Find("TopLine");
+        top = GameObject.Find("TopLine");
     }
 
     // Update is called once per frame
